@@ -6,6 +6,7 @@ import (
 	"net"
 	"net/url"
 	"os"
+	"strconv"
 
 	"gopkg.in/yaml.v3"
 
@@ -74,8 +75,8 @@ func Validate(s api.SystemConfig) error {
 			return fmt.Errorf("Failed to determine host for worker endpoint %q", s.Network.WorkerEndpoint)
 		}
 
-		if endpoint.Port() == "" {
-			return fmt.Errorf("Failed to determine port for worker endpoint %q", s.Network.WorkerEndpoint)
+		if endpoint.Port() != "" && endpoint.Port() != strconv.Itoa(s.Network.Port) {
+			return fmt.Errorf("Worker endpoint port is different %s from server port %d", endpoint.Port(), s.Network.Port)
 		}
 
 		if endpoint.Path != "" {
